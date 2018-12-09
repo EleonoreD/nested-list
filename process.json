@@ -1,0 +1,7 @@
+{
+    "apps" : [{
+      "name"        : "nested-list",
+      "script"      : "./dist/server/index.js",
+      "watch"       : ["./dist/server"]
+    }]
+  }

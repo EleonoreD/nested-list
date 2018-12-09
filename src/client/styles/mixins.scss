@@ -1,0 +1,53 @@
+@mixin box-shadow( $shadow1, $shadow2:false, $shadow3:false, $shadow4:false, $shadow5:false, $shadow6:false, $shadow7:false, $shadow8:false, $shadow9:false ) {
+    $params: $shadow1;
+    @if $shadow2 { $params: $shadow1, $shadow2; }
+    @if $shadow3 != false { $params: $shadow1, $shadow2, $shadow3; }
+    @if $shadow4 != false { $params: $shadow1, $shadow2, $shadow3, $shadow4; }
+    @if $shadow5 != false { $params: $shadow1, $shadow2, $shadow3, $shadow4, $shadow5; }
+    @if $shadow6 != false { $params: $shadow1, $shadow2, $shadow3, $shadow4, $shadow5, $shadow6; }
+    @if $shadow7 != false { $params: $shadow1, $shadow2, $shadow3, $shadow4, $shadow5, $shadow6, $shadow7}
+    @if $shadow8 != false { $params: $shadow1, $shadow2, $shadow3, $shadow4, $shadow5, $shadow6, $shadow7, $shadow8 }
+    @if $shadow9 != false { $params: $shadow1, $shadow2, $shadow3, $shadow4, $shadow5, $shadow6, $shadow7, $shadow8, $shadow9 }
+        
+    -webkit-box-shadow: $params;
+        -moz-box-shadow: $params;
+            box-shadow: $params;
+    }
+
+
+@mixin rounded($radius: 0.5em) {
+    -webkit-border-radius: .5em; 
+    -moz-border-radius: .5em;
+    border-radius: .5em;
+}
+
+//Default values:
+$ibThickness: 2px !default;
+$ibColor: black !default;
+$ibAlpha: .1 !default;
+//Use a "variable argument" to accept any number of values.
+@mixin ib($values...) {
+ $borderThickness: $ibThickness;
+ $borderColor: $ibColor;
+ $borderAlpha: $ibAlpha;
+ @each $value in $values {
+   @if type_of($value) == number {
+     @if unit($value) == "" {
+       $borderAlpha: $value;
+     } @else {
+     //No need to limit this length to just "px"
+     $borderThickness: $value;
+     }
+    } @else if type_of($value) == color {
+      $borderColor: $value;
+    }
+  }
+  box-shadow: inset 0 0 0 $borderThickness rgba($borderColor, $borderAlpha);
+}
+
+@mixin x-user-select ($value: none) {
+	-webkit-user-select: $value;
+	   -moz-user-select: $value;
+	    -ms-user-select: $value;
+	        user-select: $value;
+}

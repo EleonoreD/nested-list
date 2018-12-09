@@ -1,0 +1,194 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto);
+@import url(https://fonts.googleapis.com/css?family=Oswald);
+@import 'mixins';
+
+$family: 'Oswald', serif;  
+
+
+body{
+    font: 100% $family;
+    background-color: #FFFFFF;
+    text-align: center;
+    margin: auto;
+}
+
+#main{
+    display: inline-block;
+    width: 90%;
+    max-width: 700px;
+    margin-top: 20px;
+    position: relative;
+    margin-bottom : 50px;
+
+    h1{
+        color: #fdc646;
+        text-align: left;
+    }
+
+    h2{
+        position: absolute;
+        top: 10px;
+        right: 0px;      
+        color: #555;  
+    }
+
+    p{
+        text-align: left;
+    }
+
+    .list-ctn{
+        position: relative;
+        text-align: left;
+        margin-left: 3%;
+        &:before{
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 1px;
+            bottom: 10px;
+            border-left: 1px dashed rgba(200, 200, 200, 0.4);
+            z-index: 0;
+        }
+    }
+
+    .list-ctn.first{
+        margin-left : 0px;
+    }
+
+    .list-item{
+        display: inline-block;
+        margin-bottom: 5px;
+        text-align : left;
+        width: 97%;
+        margin-left: 3%;
+        background-color: rgba(200, 200, 200, 0.2);
+        border: 1px solid rgba(200, 200, 200, 0.3);
+        @include rounded(10px);
+        z-index: 1;
+        position: relative;
+        .item-data{
+            margin: 15px 20px;
+        }
+        .title{
+            display: inline-block;
+            width: 100%;
+            font-size: 20px;
+        }
+
+        .content{
+            display: inline-block;
+            color: #777;
+            font-size: 15px;
+        }
+        
+        .icon{
+            color: #777;
+            margin-right: 10px;
+        }
+
+        &.bt-add{
+            background-color: rgba(200, 200, 200, 0.1);
+            border: 1px dashed rgba(200, 200, 200, 0.5);
+            opacity: 0.5;
+            cursor: pointer;
+
+            &:hover{
+                opacity: 1;
+                border: 1px dotted rgba(200, 200, 200, 0.3);
+            }
+        }
+
+        .edit-bt{
+            position: absolute;
+            top: 0px;
+            right: 0px;
+            bottom: 0px;
+            width: 10%;
+            cursor: pointer;
+            opacity: 0;
+            svg{
+                position: absolute;
+                font-size: 15px;
+                top: 50%; left: 50%;
+                transform: translate(-50%, -50%); 
+            }
+            &:hover{
+                .icon{
+                    color: black;
+                }
+            }
+        }
+        &:hover{
+            .edit-bt{
+                opacity: 1;
+            }
+        }
+    }
+
+    .modal{
+        display: block;
+        position: fixed;
+        z-index: 1000;
+        top: 0; left: 0; right: 0; bottom: 0;
+
+        .cover{
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0,0,0,0.4);
+            z-index: 1;
+        }
+
+        .form{
+            position: absolute;
+            z-index: 2;
+            width: 60%;
+            max-width: 400px;
+            height: auto;
+            display: inline-block;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); 
+            
+            background-color: #fdc646;
+
+            h1{
+                color: black;
+                margin-left: 40px;
+                margin-bottom: 10px;
+            }
+
+            input[type=text], input[type=password] {    
+                width: 80%;
+                display: inline-block;
+                color: black;
+                padding: 15px;
+                box-sizing: border-box;
+                background-color: rgba(255,255,255,0.25);
+                border: none;
+                border-radius: 2px;
+                margin: 3px auto 5px;
+                transition:background-color 0.5s ease;
+            }
+
+            .valid{
+                margin:  30px;
+                background-color: white;
+                line-height: 50px;
+                font-size: 18px;
+                font-weight: bold;
+                color: black;
+                @include rounded(10px);
+                cursor: pointer;
+            }
+
+            .label{
+                margin-top: 10px;
+                display: inline-block;
+                width: 80%;
+                text-align: left;
+            }
+        }
+    }
+
+   
+}
