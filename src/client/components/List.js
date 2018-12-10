@@ -14,6 +14,7 @@ export default class List extends Component {
     @level : level of the current nested list (used to filter items by parent prop)
     @openModal : call to open the modal
     @maxLevel : number of level of nested list we allowed
+    @startDrag : function to call when a drag action is started
   */
 
     constructor(props) {
@@ -39,42 +40,39 @@ export default class List extends Component {
         this.props.openModal( itemId );
     }
 
+    // callback trigger when an item is dropped into an Add button
     onDropHandler( evt ){
-        try {
-            console.log( evt.dataTransfer.getData('itemId') );
-            data = JSON.parse(evt.dataTransfer.getData('itemId'));
-        } catch (e) {
-            // If the text data isn't parsable we'll just ignore it.
-            return;
-        }
-
-        console.log( "move "+data+" to parent "+this.props.level );
+        evt.preventDefault();
+        this.props.stopDrag( this.props.level );
     }
     
+    // prevent default dragged event
     preventDefault( evt ) {
         evt.preventDefault();
     }
 
     render() {
 
-        const { list, level, openModal, maxLevel } = this.props;
+        const { list, level, openModal, maxLevel, startDrag, stopDrag } = this.props;
 
         let keys = list && typeof list === 'object' ? Object.keys(list) : [], items = [];
 
+        // display current item + list of item attached to it
         if( Array.isArray(keys) && keys.length > 0 ){
             items = keys.map( (id) => { 
                 let l = list[id];
                 if( l.parent === level ) {
                     return(
                         <div key={'list-'+id} >
-                            <ListItem key={'item-'+id} id={id} item={l} editCallback={this.updateItemOfList} ></ListItem>
-                            <List list={list} maxLevel={maxLevel} level={id} openModal={openModal} currentLevel={this.state.currentLevel+1} ></List>
+                            <ListItem key={'item-'+id} id={id} item={l} editCallback={this.updateItemOfList} startDrag={startDrag} ></ListItem>
+                            <List list={list} maxLevel={maxLevel} level={id} openModal={openModal} currentLevel={this.state.currentLevel+1} startDrag={startDrag} stopDrag={stopDrag} ></List>
                         </div>
                     );
                 }
             });
         }
 
+        // add button 
         if( this.state.currentLevel < maxLevel ){
             items.push( 
                 <div key={'add-to-'+level} className="list-item bt-add" onClick={this.addNewItemToList} onDragOver={this.preventDefault} onDrop={this.onDropHandler}>

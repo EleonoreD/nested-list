@@ -11,6 +11,7 @@ export default class ListItem extends Component {
     @id : id (string) of the item in list
     @item : item info
     @editCallback : function to call to edit this item
+    @startDrag : function to call when a drag action is started
   */
 
 
@@ -26,9 +27,9 @@ export default class ListItem extends Component {
     this.props.editCallback( this.props.id );
   }
 
+  // notify drag action has started
   onDragHandler( evt ){
-    var data = { id: this.props.id  };
-    evt.dataTransfer.setData('itemId', JSON.stringify(data)); 
+    this.props.startDrag( this.props.id );
   }
 
   render() {

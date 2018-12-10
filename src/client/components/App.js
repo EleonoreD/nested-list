@@ -20,7 +20,12 @@ export default class App extends Component {
         parent: null
       },
       list : {},
-      maxLevel : 3
+      maxLevel : 3,
+
+      dragging : false,
+      itemDragged : null,
+      startDrag: this.startDrag.bind(this),
+      stopDrag: this.stopDrag.bind(this)
     };
   }
 
@@ -33,9 +38,25 @@ export default class App extends Component {
     fetch('/list', { method: 'GET' })
       .then(res => res.json())
       .then( listOfItems => {
-        console.log( listOfItems);
         this.setState({ list : listOfItems });
       });
+  }
+
+  // get list all children of an item 
+  browseChildrenOf( itemId ){
+    let keys = Object.keys(this.state.list);
+    let children = [];
+    let browseFor = ( item ) => {
+      keys.forEach( (key) => {
+        if( item == this.state.list[key].parent ){
+          children.push( key );
+          browseFor( key );
+        }
+      });
+    }
+    browseFor( itemId );
+    
+    return children;
   }
 
   /* callback from List Add button to open the modal
@@ -81,7 +102,6 @@ export default class App extends Component {
 
       fetch(url, { method: method, body: params })
         .then(res => {
-          console.log( res );
           this.fetchList(); // refresh list after edition or creation
         });
     }
@@ -89,8 +109,37 @@ export default class App extends Component {
     this.setState({ modal : { open : false, target: null, parent: null }});
   }
 
+  // callback for start drag action
+  startDrag( itemId ){
+    this.setState({ dragging: true, itemDragged : itemId });
+  }
+
+  // callback for drag stop - drop action - let's add itemId dragged to parentId - if possible
+  stopDrag( parentId ){
+    const { list, itemDragged } = this.state;
+    
+    // firstly, check if the parentId is not the same or inside it own children
+
+    let currentParent = list[ itemDragged ].parent;
+    if( currentParent === parentId || parentId === itemDragged ) return; // item didn't move and cannot be is own child
+
+    let childrenOfDraggedItem = this.browseChildrenOf( itemDragged );
+    if( childrenOfDraggedItem.indexOf( parentId ) !== -1 ) return; // impossible to add an item inside is own hierarchy
+
+    console.log( "drop "+this.state.itemDragged+' into '+parentId );
+    const params = new URLSearchParams();
+    params.append('title', list[ itemDragged ].title );
+    params.append('content', list[ itemDragged ].content );
+    params.append('parent', parentId );
+
+    fetch( '/list/'+itemDragged, { method: 'PUT', body: params })
+      .then(res => {
+        this.fetchList(); // refresh list after edition or creation
+      });
+  }
+
   render() {
-    const { list, modal, maxLevel } = this.state;
+    const { list, modal, maxLevel, startDrag, stopDrag } = this.state;
 
     let children = [];
 
@@ -102,7 +151,7 @@ export default class App extends Component {
         <div id="main">
           <h1>Nested List App</h1>
           <h2>Christmas Diner</h2>
-          <List key="main" list={list} maxLevel={maxLevel} level={null} openModal={this.openModal.bind(this)}></List>
+          <List key="main" list={list} maxLevel={maxLevel} level={null} openModal={this.openModal.bind(this)} startDrag={startDrag} stopDrag={stopDrag}></List>
           {children}
         </div>
     );

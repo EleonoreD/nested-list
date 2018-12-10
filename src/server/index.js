@@ -82,7 +82,7 @@ const isParamCorrect = ( param ) => {
 
 // check if the body param (title & parent id) are correctly formated
 const validateForm = ( body ) => {
-    if( isParamCorrect(body.title) && isParamCorrect(body.content) )
+    if( isParamCorrect(body.title) )
         return true;
     return false;
 }
@@ -121,7 +121,8 @@ listRoute.route('/list/:id')
         if( validateForm( req.body ) ){
             list[id].title = req.body.title || list[id].title;
             list[id].content = req.body.content || list[id].content;
-            list[id].parent = req.body.parent || list[id].parent;
+            if( isParamCorrect(req.body.parent) )
+                list[id].parent = req.body.parent == "null" ? null : req.body.parent;
             res.sendStatus(200); // send 'ok', entry updated
         }
         else
