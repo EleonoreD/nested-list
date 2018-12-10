@@ -1,12 +1,12 @@
 # Simple Nested List App
 
 ## Introduction
-Implementation of a simple hierchical list application in React JS for client side & Express Node JS for server side.
+Implementation of a simple hierchical list application in React JS for the client side & Express Node JS for the server side.
 
-The front application allows users to create or edit items and add it to a parent items.
-You also can move items from a list to an another by dragging it inside dropzones located at the end of each sub-lists.
+The front application allows users to create or edit items and add them to a parent item.
+You also can move items from one list to an other dragging it inside dropzones located at the end of each sub-list.
 
-The number of nested list levels is unlimited but is fixed by default to 3 for our exemple. 
+The number of nested list levels is unlimited but is set by default at 3 for our exemple. 
 You can edit `maxLevel` parameter in the App component's state (`src/client/component`).
 
 
@@ -14,8 +14,9 @@ The backend Express Node JS server starts a RESTful API to get items list, creat
 By default the API is reacheable at the URL : `http://localhost:4000/list/:itemId`
 
 
-All the source code is written in JS ES6 (in `src` folder) and bundle with Webpack (in the `dist` folder).
+All the source code is written in JS ES6 (in `src` folder) and bundled with Webpack (in the `dist` folder).
 The project was build on the boilerplate [create React App](https://github.com/facebook/create-react-app).
+
 
 ## Requirements
 - NodeJS v10.* 
