@@ -190,5 +190,21 @@ body{
         }
     }
 
-   
+    .isdragging{
+        display: none;
+    }
+
+    &.dragging{
+
+        .list-item.bt-add{
+            opacity: 1;
+        }
+
+        .notdragging{
+            display: none;
+        }
+        .isdragging{
+            display: inline-block;
+        }
+    }
 }

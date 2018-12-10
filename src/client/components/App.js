@@ -8,26 +8,22 @@ import NumericInput from 'react-numeric-input';
 
 export default class App extends Component {
 
-  state = Object.assign( { entered : false }, this.getInitialState() );
+  state = { 
+    modal: {
+      open: false,
+      targetId : null,
+      target : null,
+      parent: null
+    },
+    list : {},
+    maxLevel : 3,
 
-  getInitialState() {
-
-    return { 
-      modal: {
-        open: false,
-        targetId : null,
-        target : null,
-        parent: null
-      },
-      list : {},
-      maxLevel : 3,
-
-      dragging : false,
-      itemDragged : null,
-      startDrag: this.startDrag.bind(this),
-      stopDrag: this.stopDrag.bind(this)
-    };
+    dragging : false,
+    itemDragged : null,
+    startDrag: this.startDrag.bind(this),
+    stopDrag: this.stopDrag.bind(this)
   }
+  
 
   componentDidMount(){
     this.fetchList();
@@ -38,7 +34,7 @@ export default class App extends Component {
     fetch('/list', { method: 'GET' })
       .then(res => res.json())
       .then( listOfItems => {
-        this.setState({ list : listOfItems });
+        this.setState({ list : listOfItems, dragging: false, itemDragged: null });
       });
   }
 
@@ -59,6 +55,7 @@ export default class App extends Component {
     return children;
   }
 
+
   /* callback from List Add button to open the modal
     @targetId : id of item to update
     @parent : id of the parent item of the futur new item to create
@@ -73,6 +70,7 @@ export default class App extends Component {
 
     this.setState({ modal : { open : true, targetId : targetId, target: itemToEdit, parent : parent }});
   }
+
 
   // callback from Modal component to close the (edit/create) item window
   // if payload is null, only cancel editing action
@@ -101,22 +99,25 @@ export default class App extends Component {
       }
 
       fetch(url, { method: method, body: params })
-        .then(res => {
-          this.fetchList(); // refresh list after edition or creation
-        });
+        .then(res => { this.fetchList(); }); // refresh list after edition or creation 
     }
     // close the modal
     this.setState({ modal : { open : false, target: null, parent: null }});
   }
+
 
   // callback for start drag action
   startDrag( itemId ){
     this.setState({ dragging: true, itemDragged : itemId });
   }
 
+
   // callback for drag stop - drop action - let's add itemId dragged to parentId - if possible
   stopDrag( parentId ){
     const { list, itemDragged } = this.state;
+    
+    // update state dropped
+    this.setState({ dragging: false, itemDragged : null });
     
     // firstly, check if the parentId is not the same or inside it own children
 
@@ -126,29 +127,34 @@ export default class App extends Component {
     let childrenOfDraggedItem = this.browseChildrenOf( itemDragged );
     if( childrenOfDraggedItem.indexOf( parentId ) !== -1 ) return; // impossible to add an item inside is own hierarchy
 
-    console.log( "drop "+this.state.itemDragged+' into '+parentId );
+    // request parent update for this item
     const params = new URLSearchParams();
     params.append('title', list[ itemDragged ].title );
     params.append('content', list[ itemDragged ].content );
     params.append('parent', parentId );
 
     fetch( '/list/'+itemDragged, { method: 'PUT', body: params })
-      .then(res => {
-        this.fetchList(); // refresh list after edition or creation
-      });
+      .then(res => { this.fetchList(); }); // refresh list after edition or creation 
+
+
   }
 
+
   render() {
-    const { list, modal, maxLevel, startDrag, stopDrag } = this.state;
+    const { list, modal, maxLevel, dragging, startDrag, stopDrag } = this.state;
 
     let children = [];
 
+    // Create modal component if user is editing or creating an item
     if( modal.open ){
       children.push( <Modal key="modal" item={modal.target} closeModal={this.closeModal.bind(this)} ></Modal> )
     }
 
+    let dragClass = dragging == true ? 'dragging' : 'dropped';
+    console.log( dragClass );
+
     return ( 
-        <div id="main">
+        <div id="main" className={dragClass} >
           <h1>Nested List App</h1>
           <h2>Christmas Diner</h2>
           <List key="main" list={list} maxLevel={maxLevel} level={null} openModal={this.openModal.bind(this)} startDrag={startDrag} stopDrag={stopDrag}></List>

@@ -4,6 +4,7 @@ import ListItem from './ListItem';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlusCircle } from '@fortawesome/free-solid-svg-icons'
+import { faCaretSquareDown } from '@fortawesome/free-solid-svg-icons'
 
 export default class List extends Component {
 
@@ -77,8 +78,10 @@ export default class List extends Component {
             items.push( 
                 <div key={'add-to-'+level} className="list-item bt-add" onClick={this.addNewItemToList} onDragOver={this.preventDefault} onDrop={this.onDropHandler}>
                     <div className="item-data">
-                        <FontAwesomeIcon className="icon" icon={faPlusCircle}/>
-                        <span className="content">Add new</span>
+                        <FontAwesomeIcon className="icon notdragging" icon={faPlusCircle}/>
+                        <span className="content notdragging">Add new</span>
+                        <FontAwesomeIcon className="icon isdragging" icon={faCaretSquareDown}/>
+                        <span className="content isdragging">Drop inside</span>
                     </div>
                 </div>);
         }
