@@ -140,6 +140,12 @@ export default class App extends Component {
   }
 
 
+  deleteItem( itemId ){
+    fetch( '/list/'+itemId, { method: 'DELETE' })
+      .then(res => { this.fetchList(); }); // refresh list after edition or creation 
+  }
+
+
   render() {
     const { list, modal, maxLevel, dragging, startDrag, stopDrag } = this.state;
 
@@ -151,13 +157,12 @@ export default class App extends Component {
     }
 
     let dragClass = dragging == true ? 'dragging' : 'dropped';
-    console.log( dragClass );
 
     return ( 
         <div id="main" className={dragClass} >
           <h1>Nested List App</h1>
           <h2>Christmas Diner</h2>
-          <List key="main" list={list} maxLevel={maxLevel} level={null} openModal={this.openModal.bind(this)} startDrag={startDrag} stopDrag={stopDrag}></List>
+          <List key="main" list={list} maxLevel={maxLevel} level={null} openModal={this.openModal.bind(this)} startDrag={startDrag} stopDrag={stopDrag} deleteCallback={this.deleteItem.bind(this)} ></List>
           {children}
         </div>
     );

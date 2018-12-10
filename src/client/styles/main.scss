@@ -98,12 +98,12 @@ body{
             }
         }
 
-        .edit-bt{
+        .action-bt{
             position: absolute;
             top: 0px;
             right: 0px;
             bottom: 0px;
-            width: 10%;
+            width: 7%;
             cursor: pointer;
             opacity: 0;
             svg{
@@ -117,9 +117,13 @@ body{
                     color: black;
                 }
             }
+
+            &.delete-bt{
+                right: 7%;
+            }
         }
         &:hover{
-            .edit-bt{
+            .action-bt{
                 opacity: 1;
             }
         }

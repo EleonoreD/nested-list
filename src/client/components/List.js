@@ -16,6 +16,7 @@ export default class List extends Component {
     @openModal : call to open the modal
     @maxLevel : number of level of nested list we allowed
     @startDrag : function to call when a drag action is started
+    @deleteCallback : function to call to delete an item
   */
 
     constructor(props) {
@@ -54,7 +55,7 @@ export default class List extends Component {
 
     render() {
 
-        const { list, level, openModal, maxLevel, startDrag, stopDrag } = this.props;
+        const { list, level, openModal, maxLevel, startDrag, stopDrag, deleteCallback } = this.props;
 
         let keys = list && typeof list === 'object' ? Object.keys(list) : [], items = [];
 
@@ -65,8 +66,8 @@ export default class List extends Component {
                 if( l.parent === level ) {
                     return(
                         <div key={'list-'+id} >
-                            <ListItem key={'item-'+id} id={id} item={l} editCallback={this.updateItemOfList} startDrag={startDrag} ></ListItem>
-                            <List list={list} maxLevel={maxLevel} level={id} openModal={openModal} currentLevel={this.state.currentLevel+1} startDrag={startDrag} stopDrag={stopDrag} ></List>
+                            <ListItem key={'item-'+id} id={id} item={l} editCallback={this.updateItemOfList} deleteCallback={deleteCallback} startDrag={startDrag} ></ListItem>
+                            <List list={list} maxLevel={maxLevel} level={id} openModal={openModal} currentLevel={this.state.currentLevel+1} deleteCallback={deleteCallback} startDrag={startDrag} stopDrag={stopDrag} ></List>
                         </div>
                     );
                 }
